@@ -8,7 +8,7 @@ type QueueCtx struct {
 	queue     *Queue
 }
 
-func NewCtx(ctx context.Context, concurrency int) *QueueCtx {
+func NewWithContext(ctx context.Context, concurrency int) *QueueCtx {
 	ctx, cancel := context.WithCancel(context.Background())
 	return &QueueCtx{
 		ctx:       ctx,
