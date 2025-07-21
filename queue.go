@@ -36,9 +36,20 @@ func (q *Queue) Stop() {
 	q.queue.Stop()
 }
 
+func (q *Queue) CancelAndClose() {
+	q.close(true)
+}
+
 func (q *Queue) Close() {
+	q.close(false)
+}
+
+func (q *Queue) close(cancel bool) {
 	if q.closed.CompareAndSwap(false, true) {
 		q.queue.Stop()
+		if cancel {
+			q.handler.cancel()
+		}
 		q.handler.stop()
 		q.queue.Close()
 	}
