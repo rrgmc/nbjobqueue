@@ -1,25 +1,19 @@
 package nbjobqueue
 
 import (
-	"context"
 	"sync"
 
 	"github.com/rrgmc/nbchanlist"
 )
 
 type handler struct {
-	ctx         context.Context
-	ctxCancel   context.CancelFunc
 	queue       *nbchanlist.Queue[Job]
 	concurrency int
 	wg          sync.WaitGroup
 }
 
 func newHandler(queue *nbchanlist.Queue[Job], concurrency int) *handler {
-	ctx, cancel := context.WithCancel(context.Background())
 	ret := &handler{
-		ctx:         ctx,
-		ctxCancel:   cancel,
 		queue:       queue,
 		concurrency: concurrency,
 	}
@@ -34,8 +28,6 @@ func (h *handler) start() {
 			defer h.wg.Done()
 			for {
 				select {
-				case <-h.ctx.Done():
-					return
 				case v, ok := <-h.queue.Get():
 					if !ok {
 						return
@@ -45,10 +37,6 @@ func (h *handler) start() {
 			}
 		}()
 	}
-}
-
-func (h *handler) cancel() {
-	h.ctxCancel()
 }
 
 func (h *handler) stop() {

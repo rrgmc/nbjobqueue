@@ -61,11 +61,14 @@ func (q *Queue) Close() {
 
 func (q *Queue) close(cancel bool) {
 	if q.closed.CompareAndSwap(false, true) {
-		q.queue.Stop() // stop accepting new jobs
 		if cancel {
-			q.handler.cancel() // stop all job handler goroutines
+			q.queue.Close() // stop accepting new jobs and drain remaining jobs
+		} else {
+			q.queue.Stop() // stop accepting new jobs
 		}
 		q.handler.stop() // wait for all job handler goroutines to finish
-		q.queue.Close()  // stop queue processing and drain remaining jobs
+		if !cancel {
+			q.queue.Close() // stop queue processing and drain remaining jobs
+		}
 	}
 }
