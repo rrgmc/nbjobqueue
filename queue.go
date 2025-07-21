@@ -31,8 +31,16 @@ func (q *Queue) Add(job Job) {
 	q.queue.Put(job)
 }
 
+func (q *Queue) AddCheck(job Job) error {
+	return q.queue.PutCheck(job)
+}
+
 func (q *Queue) AddJob(f func()) {
 	q.Add(JobFunc(f))
+}
+
+func (q *Queue) AddJobCheck(f func()) error {
+	return q.AddCheck(JobFunc(f))
 }
 
 func (q *Queue) Stop() {
