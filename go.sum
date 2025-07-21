@@ -1,0 +1,6 @@
+github.com/rrgmc/nbchanlist v0.5.1 h1:9SHmGRg8ZU36RqKI9Dwau8IhM30iSZKuTHn62Y5CM6Q=
+github.com/rrgmc/nbchanlist v0.5.1/go.mod h1:3hJYW04eAhgaSXeNckQFLSm5IXL87TCocfpiGEmI5aE=
+github.com/rrgmc/nbchanlist v0.5.2 h1:IUWQE8+RMfPqptmVq/XAKiosbdJMT/vWjrvcIzHXDvw=
+github.com/rrgmc/nbchanlist v0.5.2/go.mod h1:3hJYW04eAhgaSXeNckQFLSm5IXL87TCocfpiGEmI5aE=
+gotest.tools/v3 v3.5.2 h1:7koQfIKdy+I8UTetycgUqXWSDwpgv193Ka+qRsmBY8Q=
+gotest.tools/v3 v3.5.2/go.mod h1:LtdLGcnqToBH83WByAAi/wiwSFCArdFIUV/xxN4pcjA=
