@@ -6,7 +6,7 @@ import (
 )
 
 func TestQueue(t *testing.T) {
-	jq := New()
+	jq := New(3)
 	jq.AddJob(func() {
 		fmt.Println("job 1")
 	})

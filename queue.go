@@ -7,13 +7,16 @@ var (
 )
 
 type Queue struct {
-	queue *nbchanlist.Queue[Job]
+	queue   *nbchanlist.Queue[Job]
+	handler *handler
 }
 
-func New() *Queue {
-	return &Queue{
+func New(concurrency int) *Queue {
+	ret := &Queue{
 		queue: nbchanlist.NewQueue[Job](),
 	}
+	ret.handler = newHandler(ret.queue, concurrency)
+	return ret
 }
 
 func (q *Queue) Add(job Job) {
