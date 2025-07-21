@@ -17,6 +17,9 @@ type Queue struct {
 }
 
 func New(concurrency int) *Queue {
+	if concurrency < 1 {
+		concurrency = 1
+	}
 	ret := &Queue{
 		queue: nbchanlist.NewQueue[Job](),
 	}
