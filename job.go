@@ -6,4 +6,6 @@ type Job interface {
 
 type JobFunc func()
 
-func (f JobFunc) Run() {}
+func (f JobFunc) Run() {
+	f()
+}

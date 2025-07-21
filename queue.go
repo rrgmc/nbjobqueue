@@ -1,6 +1,10 @@
 package nbjobqueue
 
-import "github.com/rrgmc/nbchanlist"
+import (
+	"sync/atomic"
+
+	"github.com/rrgmc/nbchanlist"
+)
 
 var (
 	ErrClosed = nbchanlist.ErrStopped
@@ -9,6 +13,7 @@ var (
 type Queue struct {
 	queue   *nbchanlist.Queue[Job]
 	handler *handler
+	closed  atomic.Bool
 }
 
 func New(concurrency int) *Queue {
@@ -32,5 +37,9 @@ func (q *Queue) Stop() {
 }
 
 func (q *Queue) Close() {
-	q.queue.Close()
+	if q.closed.CompareAndSwap(false, true) {
+		q.queue.Stop()
+		q.handler.stop()
+		q.queue.Close()
+	}
 }
