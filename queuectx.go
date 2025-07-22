@@ -49,7 +49,7 @@ func (q *QueueCtx) CancelAndClose() {
 	if !q.queue.Closed() {
 		q.ctxCancel()
 	}
-	q.queue.CancelAndClose()
+	q.queue.Close() // we are doing our own cancelling
 }
 
 func (q *QueueCtx) Close() {
