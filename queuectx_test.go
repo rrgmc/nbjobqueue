@@ -25,7 +25,7 @@ func TestQueueCtx(t *testing.T) {
 		})
 	}
 
-	jq.Close()
+	jq.Shutdown()
 
 	assert.Assert(t, jq.Closed())
 
@@ -54,12 +54,12 @@ func TestQueueCtxCancel(t *testing.T) {
 		})
 	}
 
-	jq.CloseOpt(false, true)
+	jq.ShutdownOpt(false, true)
 
 	assert.DeepEqual(t, []int{1, 3, 5, 7, 9}, items, cmpopts.SortSlices(cmp.Less[int]))
 }
 
-func TestQueueCtxStop(t *testing.T) {
+func TestQueueCtxClose(t *testing.T) {
 	jq := NewWithContext(context.Background(), 3)
 
 	var items []int
@@ -73,7 +73,7 @@ func TestQueueCtxStop(t *testing.T) {
 		})
 	}
 
-	jq.Stop()
+	jq.Close()
 
 	for i := 10; i < 20; i++ {
 		err := jq.AddJobCheck(func(ctx context.Context) {
@@ -84,7 +84,7 @@ func TestQueueCtxStop(t *testing.T) {
 		assert.ErrorIs(t, err, ErrClosed)
 	}
 
-	jq.Close()
+	jq.Shutdown()
 
 	assert.Assert(t, jq.Closed())
 	assert.DeepEqual(t, []int{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}, items, cmpopts.SortSlices(cmp.Less[int]))

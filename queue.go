@@ -7,7 +7,7 @@ import (
 )
 
 var (
-	ErrClosed = nbchanlist.ErrStopped
+	ErrClosed = nbchanlist.ErrClosed
 )
 
 type Queue struct {
@@ -43,31 +43,33 @@ func (q *Queue) AddJobCheck(f func()) error {
 	return q.AddCheck(JobFunc(f))
 }
 
+// Closed returns whether Close was called.
 func (q *Queue) Closed() bool {
 	return q.closed.Load()
 }
 
-func (q *Queue) Stop() {
-	q.queue.Stop()
-}
-
-// CloseOpt stops accepting new jobs, and waits until all existing jobs finish.
-// If drain is true, clean the list of pending jobs before waiting.
-func (q *Queue) CloseOpt(drain bool) {
-	q.close(drain, false, nil)
-}
-
-// Close stops accepting new jobs and waits until all existing jobs finish.
+// Close stops accepting new jobs. Existing jobs will still run.
 func (q *Queue) Close() {
-	q.close(false, false, nil)
+	q.queue.Close()
 }
 
-func (q *Queue) close(drain bool, cancel bool, stoppedCB func()) {
+// ShutdownOpt stops accepting new jobs, and waits until all existing jobs finish.
+// If drain is true, clean the list of pending jobs before waiting.
+func (q *Queue) ShutdownOpt(drain bool) {
+	q.shutdown(drain, false, nil)
+}
+
+// Shutdown stops accepting new jobs and waits until all existing jobs finish.
+func (q *Queue) Shutdown() {
+	q.shutdown(false, false, nil)
+}
+
+func (q *Queue) shutdown(drain bool, cancel bool, stoppedCB func()) {
 	if q.closed.CompareAndSwap(false, true) {
 		if drain {
-			q.queue.Close() // stop accepting new jobs and drain remaining jobs
+			q.queue.Shutdown() // stop accepting new jobs and drain remaining jobs
 		} else {
-			q.queue.Stop() // stop accepting new jobs
+			q.queue.Close() // stop accepting new jobs
 		}
 		if cancel {
 			if stoppedCB != nil {
@@ -83,7 +85,7 @@ func (q *Queue) close(drain bool, cancel bool, stoppedCB func()) {
 			}
 		}
 		if !drain {
-			q.queue.Close() // stop queue processing and drain remaining jobs
+			q.queue.Shutdown() // stop queue processing and drain remaining jobs
 		}
 	}
 }

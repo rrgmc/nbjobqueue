@@ -25,7 +25,7 @@ func ExampleQueue() {
 		})
 	}
 
-	jq.Close() // wait for all jobs to be done, then release all resources.
+	jq.Shutdown() // wait for all jobs to be done, then release all resources.
 
 	slices.Sort(items)
 	fmt.Println(items)
@@ -49,7 +49,7 @@ func ExampleQueueCtx() {
 		})
 	}
 
-	jq.CloseOpt(false, true) // cancel the context sent to jobs, but still calls all pending jobs.
+	jq.ShutdownOpt(false, true) // cancel the context sent to jobs, but still calls all pending jobs.
 
 	slices.Sort(items)
 	fmt.Println(items)

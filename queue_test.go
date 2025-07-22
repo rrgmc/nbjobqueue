@@ -25,13 +25,13 @@ func TestQueue(t *testing.T) {
 		})
 	}
 
-	jq.Close()
+	jq.Shutdown()
 
 	assert.Assert(t, jq.Closed())
 	assert.DeepEqual(t, []int{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}, items, cmpopts.SortSlices(cmp.Less[int]))
 }
 
-func TestQueueCloseDrain(t *testing.T) {
+func TestQueueShutdownDrain(t *testing.T) {
 	for _, drain := range []bool{false, true} {
 		t.Run(fmt.Sprintf("drain=%t", drain), func(t *testing.T) {
 			jq := New(3)
@@ -48,7 +48,7 @@ func TestQueueCloseDrain(t *testing.T) {
 				})
 			}
 
-			jq.CloseOpt(drain)
+			jq.ShutdownOpt(drain)
 
 			if drain {
 				assert.DeepEqual(t, []int{0, 1, 2}, items, cmpopts.SortSlices(cmp.Less[int]))
@@ -59,7 +59,7 @@ func TestQueueCloseDrain(t *testing.T) {
 	}
 }
 
-func TestQueueStop(t *testing.T) {
+func TestQueueClose(t *testing.T) {
 	jq := New(3)
 
 	var items []int
@@ -73,7 +73,7 @@ func TestQueueStop(t *testing.T) {
 		})
 	}
 
-	jq.Stop()
+	jq.Close()
 
 	for i := 10; i < 20; i++ {
 		err := jq.AddJobCheck(func() {
@@ -84,7 +84,7 @@ func TestQueueStop(t *testing.T) {
 		assert.ErrorIs(t, err, ErrClosed)
 	}
 
-	jq.Close()
+	jq.Shutdown()
 
 	assert.Assert(t, jq.Closed())
 	assert.DeepEqual(t, []int{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}, items, cmpopts.SortSlices(cmp.Less[int]))
@@ -104,7 +104,7 @@ func TestQueueNegativeConcurrency(t *testing.T) {
 		})
 	}
 
-	jq.Close()
+	jq.Shutdown()
 
 	assert.Assert(t, jq.Closed())
 	assert.DeepEqual(t, []int{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}, items, cmpopts.SortSlices(cmp.Less[int]))
