@@ -54,7 +54,7 @@ func (q *QueueCtx) CloseOpt(drain bool, cancel bool) {
 
 // Close stops accepting new jobs, cancels the context, and waits until all existing jobs finish.
 func (q *QueueCtx) Close() {
-	q.close(false, false)
+	q.close(false, true)
 }
 
 func (q *QueueCtx) close(drain bool, cancel bool) {
