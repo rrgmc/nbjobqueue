@@ -4,5 +4,7 @@ github.com/rrgmc/nbchanlist v0.5.2 h1:IUWQE8+RMfPqptmVq/XAKiosbdJMT/vWjrvcIzHXDv
 github.com/rrgmc/nbchanlist v0.5.2/go.mod h1:3hJYW04eAhgaSXeNckQFLSm5IXL87TCocfpiGEmI5aE=
 github.com/rrgmc/nbchanlist v0.5.3 h1:Txy2Ws7kwaCfu9okkplUX+58Vw4F4TwWnO0saRqKwjw=
 github.com/rrgmc/nbchanlist v0.5.3/go.mod h1:4hqSpF8Jjq2L7gkgHOv3XZtLBYKEypDeb4CN3aKuhqY=
+github.com/rrgmc/nbchanlist v0.5.5 h1:WutiiVVhTBNmDMh09yyXdY88ahRr7r5ex8DqQb5qtVw=
+github.com/rrgmc/nbchanlist v0.5.5/go.mod h1:4hqSpF8Jjq2L7gkgHOv3XZtLBYKEypDeb4CN3aKuhqY=
 gotest.tools/v3 v3.5.2 h1:7koQfIKdy+I8UTetycgUqXWSDwpgv193Ka+qRsmBY8Q=
 gotest.tools/v3 v3.5.2/go.mod h1:LtdLGcnqToBH83WByAAi/wiwSFCArdFIUV/xxN4pcjA=
