@@ -52,7 +52,7 @@ func TestQueueCtxCancel(t *testing.T) {
 		})
 	}
 
-	jq.CancelAndClose()
+	jq.CloseOpt(false, true)
 
 	assert.DeepEqual(t, []int{1, 3, 5, 7, 9}, items, cmpopts.SortSlices(cmp.Less[int]))
 }

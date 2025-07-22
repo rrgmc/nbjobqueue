@@ -45,14 +45,20 @@ func (q *QueueCtx) Stop() {
 	q.queue.Stop()
 }
 
-func (q *QueueCtx) CancelAndClose() {
-	if !q.queue.Closed() {
-		q.ctxCancel()
-	}
-	q.queue.Close() // we are doing our own cancelling
+// CloseOpt stops accepting new jobs, and waits until all existing jobs finish.
+// If drain is true, the list of pending jobs is cleared before waiting.
+// If cancel is true, the context is canceled before waiting.
+func (q *QueueCtx) CloseOpt(drain bool, cancel bool) {
+	q.close(drain, cancel)
 }
 
+// Close stops accepting new jobs, cancels the context, and waits until all existing jobs finish.
 func (q *QueueCtx) Close() {
-	q.queue.Close()
-	q.ctxCancel()
+	q.close(false, false)
+}
+
+func (q *QueueCtx) close(drain bool, cancel bool) {
+	q.queue.close(drain, cancel, func() {
+		q.ctxCancel()
+	})
 }

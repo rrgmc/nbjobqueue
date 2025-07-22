@@ -51,23 +51,38 @@ func (q *Queue) Stop() {
 	q.queue.Stop()
 }
 
-func (q *Queue) CancelAndClose() {
-	q.close(true)
+// CloseOpt stops accepting new jobs, and waits until all existing jobs finish.
+// If drain is true, clean the list of pending jobs before waiting.
+func (q *Queue) CloseOpt(drain bool) {
+	q.close(drain, false, nil)
 }
 
+// Close stops accepting new jobs and waits until all existing jobs finish.
 func (q *Queue) Close() {
-	q.close(false)
+	q.close(false, false, nil)
 }
 
-func (q *Queue) close(cancel bool) {
+func (q *Queue) close(drain bool, cancel bool, stoppedCB func()) {
 	if q.closed.CompareAndSwap(false, true) {
-		if cancel {
+		if drain {
 			q.queue.Close() // stop accepting new jobs and drain remaining jobs
 		} else {
 			q.queue.Stop() // stop accepting new jobs
 		}
+		if cancel {
+			if stoppedCB != nil {
+				stoppedCB()
+			}
+		}
+
 		q.handler.stop() // wait for all job handler goroutines to finish
+
 		if !cancel {
+			if stoppedCB != nil {
+				stoppedCB()
+			}
+		}
+		if !drain {
 			q.queue.Close() // stop queue processing and drain remaining jobs
 		}
 	}

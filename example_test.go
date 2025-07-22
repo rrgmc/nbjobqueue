@@ -49,7 +49,7 @@ func ExampleQueueCtx() {
 		})
 	}
 
-	jq.CancelAndClose() // cancels the context sent to jobs, and close without processing any remaining jobs.
+	jq.CloseOpt(false, true) // cancel the context sent to jobs, but still calls all pending jobs.
 
 	slices.Sort(items)
 	fmt.Println(items)
